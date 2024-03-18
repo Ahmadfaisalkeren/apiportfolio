@@ -4,41 +4,37 @@ namespace App\Http\Controllers\API\Auth;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\UserResource;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class LoginController extends Controller
 {
     public function login(Request $request)
     {
-        $rules = [
+        $request->validate([
             'email' => 'required|email',
-            'password' => 'required'
-        ];
+            'password' => 'required',
+        ]);
 
-        $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' => "Login Invalid",
-                'data' => $validator->errors()
-            ], 401);
+        $email = $request->email;
+        $password = $request->password;
+
+        $user = User::where('email', $email)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            Log::error('Unauthorized login attempt for email: ' . $request->email);
+            return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        if (!Auth::attempt($request->only(['email', 'password']))) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Email and password invalid'
-            ], 401);
-        }
+        $token = $user->createToken('token-name')->plainTextToken;
 
-        $datauser = User::where('email', $request->email)->first();
+        $user->tokens->last()->update(['expires_at' => now()->addMinutes(1440)]);
+
         return response()->json([
-            'status' => true,
-            'message' => 'Login Success',
-            'token' => $datauser->createToken('api-login')->plainTextToken
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => 1440,
         ]);
     }
 }

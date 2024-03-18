@@ -11,7 +11,7 @@ class ProjectsService
 {
     public function getProjects()
     {
-        $projects = Projects::all();
+        $projects = Projects::orderBy('id', 'DESC')->get();
 
         return $projects;
     }
@@ -41,25 +41,25 @@ class ProjectsService
         return $project;
     }
 
-    private function updateImage(Projects $project, $image = null)
+    private function updateImage(Projects $project, $image)
     {
-        if ($image && $image->isValid()) {
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $imagePath = $image->storeAs('public/images/projects', $imageName);
+        $imageName = time() . '.' . $image->getClientOriginalExtension();
+        $imagePath = $image->storeAs('public/images/projects', $imageName);
 
-            if ($project->image) {
-                Storage::delete('public/' . $project->image);
-            }
-
-            $project->image = str_replace('public/', '', $imagePath);
+        if ($project->image) {
+            Storage::delete('public/' . $project->image);
         }
+
+        $project->image = str_replace('public/', '', $imagePath);
     }
 
     public function updateProject(Projects $project, array $data)
     {
         $project->title = $data['title'] ?? $project->title;
 
-        $this->updateImage($project, $data['image'] ?? null);
+        if (isset($data['image'])) {
+            $this->updateImage($project, $data['image']);
+        }
 
         $project->description = $data['description'] ?? $project->description;
         $project->githublink = $data['githublink'] ?? $project->weblink;

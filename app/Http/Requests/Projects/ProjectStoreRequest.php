@@ -23,7 +23,7 @@ class ProjectStoreRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255',
-            'image' => 'required|mimes:png,jpg|max:4000',
+            'image' => 'required|mimes:jpg,png,svg,jpeg|max:4000',
             'description' => 'required|string',
             'weblink' => 'required|string|max:255',
             'githublink' => 'required|string|max:255',

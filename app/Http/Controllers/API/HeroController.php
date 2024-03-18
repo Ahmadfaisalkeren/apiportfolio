@@ -19,11 +19,11 @@ class HeroController extends Controller
 
     public function index()
     {
-        $heros = $this->heroService->getHeroes();
+        $heroes = $this->heroService->getHeroes();
 
         return response()->json([
             'message' => 'Heroes Fetched Successfully',
-            'heros' => $heros,
+            'heroes' => $heroes,
         ]);
     }
 

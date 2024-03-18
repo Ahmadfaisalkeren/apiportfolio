@@ -20,11 +20,11 @@ class SkillsController extends Controller
 
     public function index()
     {
-        $skill = $this->skillService->getSkills();
+        $skills = $this->skillService->getSkills();
 
         return response()->json([
             'message' => 'Skills Fetched Successfully',
-            'skill' => $skill,
+            'skills' => $skills,
         ]);
     }
 

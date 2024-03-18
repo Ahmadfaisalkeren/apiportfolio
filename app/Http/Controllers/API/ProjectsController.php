@@ -19,11 +19,11 @@ class ProjectsController extends Controller
 
     public function index()
     {
-        $project = $this->projectService->getProjects();
+        $projects = $this->projectService->getProjects();
 
         return response()->json([
             'message' => 'Projects Fetched Successfully',
-            'project' => $project,
+            'projects' => $projects,
         ]);
     }
 

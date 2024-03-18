@@ -24,8 +24,7 @@ class SkillStoreRequest extends FormRequest
         return [
             'skill' => 'required|string|max:255',
             'description' => 'required|string',
-            'image' => 'required|mimes:jpg,png|max:4000',
-            'hero_id' => 'required|numeric'
+            'image' => 'required|mimes:jpg,png|max:4000'
         ];
     }
 }

@@ -12,7 +12,7 @@ class SkillsService
 {
     public function getSkills()
     {
-        $skills = Skills::select(['id', 'skill', 'description', 'image'])->get();
+        $skills = Skills::select(['id', 'skill', 'description', 'image'])->orderBy('id', 'DESC')->get();
 
         return $skills;
     }

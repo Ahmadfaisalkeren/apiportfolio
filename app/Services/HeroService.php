@@ -11,7 +11,7 @@ class HeroService
 {
     public function getHeroes()
     {
-        $heroes = Hero::with('skill')->get();
+        $heroes = Hero::orderby('id', 'desc')->get();
 
         return $heroes;
     }
